@@ -1,0 +1,2 @@
+# wordleSolver
+Wordle solver
