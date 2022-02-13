@@ -1,5 +1,50 @@
 import random
 
+# b for black
+# g for green
+# y for yellow
+def filter_words(words, guess, guess_result, ignore_list):
+    letters_to_ignore = ignore_list
+    for i in range(len(guess)):
+        if guess_result[i] != 'b':
+            if guess[i] in letters_to_ignore:
+                letters_to_ignore = letters_to_ignore.replace(guess[i],"",1)
+            else:
+                letters_to_ignore += guess[i]
+    
+    return [word for word in words if matches_guesses(word,guess,guess_result)], letters_to_ignore
+
+
+# b for black
+# g for green
+# y for yellow
+def matches_guesses(word, guess, guess_result):
+    for i in range(len(guess_result)):
+        if guess_result[i] == 'g' and word[i] != guess[i]:
+            return False
+        elif guess_result[i] == 'y':
+            if guess[i] == word[i]:
+                return False
+            elif guess[i] not in word:
+                return False
+        elif guess_result[i] == 'b':
+            if word[i] == guess[i]:
+                return False
+            
+            wrong_letter_guesses = find_index(guess, guess[i])
+            good_count = 0
+            for x in wrong_letter_guesses:
+                if guess_result[x] != 'b':
+                    good_count +=1
+            wrong_letter_guesses = find_index(word,guess[i])
+            if len(wrong_letter_guesses) > good_count:
+                return False
+    return True
+
+def find_index(word,letter):
+    return [i for i, letter_temp in enumerate(word) if letter_temp == letter]
+
+
 def get_word(all_words_list,possible_words,ignore_list):
     letter_frequency = {}
     position_frequency = [{}]*6
